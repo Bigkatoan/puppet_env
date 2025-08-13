@@ -22,7 +22,7 @@ class Ros2RobotEnv(gym.Env, Node):
 
     Observation Space:
     A dictionary containing:
-    - 'scan': LaserScan data.
+    - 'scan': LaserScan data, processed into a 360-point array.
     - 'rgb': RGB camera image.
     - 'depth': Depth camera image.
     - 'wheel_velocities': Velocities of the robot's wheels.
@@ -96,7 +96,35 @@ class Ros2RobotEnv(gym.Env, Node):
 
     # --- Subscriber Callbacks ---
     def scan_callback(self, msg):
-        self.latest_scan = np.array(msg.ranges, dtype=np.float32)
+        """
+        Processes raw LaserScan data into a 360-point array.
+        Each index in the array corresponds to an integer degree (0-359).
+        """
+        # Create a new array of 360 points, one for each degree.
+        # Initialize with a large value (or np.inf) to represent no obstacle.
+        processed_scan = np.full(360, np.inf, dtype=np.float32)
+
+        # For each measurement in the raw scan data...
+        for i, range_val in enumerate(msg.ranges):
+            # If the range is invalid (inf or nan), skip it.
+            if not np.isfinite(range_val):
+                continue
+
+            # Calculate the angle of the measurement in degrees.
+            angle_rad = msg.angle_min + i * msg.angle_increment
+            angle_deg = np.rad2deg(angle_rad)
+
+            # Normalize the angle to be within [0, 359].
+            # We round to the nearest integer degree.
+            degree_index = int(round(angle_deg)) % 360
+
+            # If we have multiple measurements for the same degree,
+            # we take the minimum one, as it represents the closest obstacle at that angle.
+            if range_val < processed_scan[degree_index]:
+                processed_scan[degree_index] = range_val
+
+        # Store the processed 360-point scan.
+        self.latest_scan = processed_scan
 
     def rgb_callback(self, msg):
         self.latest_rgb = self.bridge.imgmsg_to_cv2(msg, "bgr8")
@@ -123,7 +151,7 @@ class Ros2RobotEnv(gym.Env, Node):
             self.get_logger().info("Waiting for sensor data...", once=True)
             rclpy.spin_once(self, timeout_sec=0.1)
         obs = {
-            'scan': self.latest_scan if self.latest_scan is not None else np.zeros(self.observation_space['scan'].shape, dtype=np.float32),
+            'scan': self.latest_scan if self.latest_scan is not None else np.full(360, np.inf, dtype=np.float32),
             'rgb': self.latest_rgb if self.latest_rgb is not None else np.zeros(self.observation_space['rgb'].shape, dtype=np.uint8),
             'depth': self.latest_depth if self.latest_depth is not None else np.zeros(self.observation_space['depth'].shape, dtype=np.float32),
             'wheel_velocities': self.latest_joint_states if self.latest_joint_states is not None else np.zeros(self.observation_space['wheel_velocities'].shape, dtype=np.float32),
@@ -146,7 +174,6 @@ class Ros2RobotEnv(gym.Env, Node):
         
         observation = self._get_obs()
         
-        # Initialize previous distance for shaped reward calculation
         initial_distance = np.linalg.norm(observation['current_pose'][:2] - self.target_pose)
         self.previous_distance_to_goal = initial_distance
         
@@ -170,42 +197,28 @@ class Ros2RobotEnv(gym.Env, Node):
         return observation, reward, terminated, truncated, info
 
     def _calculate_reward(self, observation):
-        """
-        Calculates the reward based on the shaped reward function from the research paper.
-        """
         terminated = False
         reward = 0.0
-
         current_pos = observation['current_pose'][:2]
         scan_data = observation['scan']
-
-        # --- 1. Progress Reward ---
         distance_to_goal = np.linalg.norm(current_pos - self.target_pose)
         distance_reduction = self.previous_distance_to_goal - distance_to_goal
         r_progress = self.progress_reward_weight * distance_reduction
         reward += r_progress
         self.previous_distance_to_goal = distance_to_goal
-
-        # --- 2. Obstacle Penalty ---
-        d_obs = np.nanmin(scan_data) # Use nanmin to ignore inf values
+        d_obs = np.min(scan_data) # np.min works because inf is ignored implicitly
         if d_obs < self.safety_margin:
             r_obstacle = -self.obstacle_penalty_weight * (self.safety_margin - d_obs)**2
             reward += r_obstacle
-
-        # --- 3. Time Penalty ---
         reward += self.time_penalty
-
-        # --- 4. Termination Conditions ---
         if distance_to_goal < self.goal_distance_threshold:
             self.get_logger().info("Goal Reached!")
             reward += 100.0
             terminated = True
-
         if d_obs < self.collision_distance_threshold:
             self.get_logger().warn("Collision Detected!")
             reward -= 100.0
             terminated = True
-
         return reward, terminated
 
     def stop_robot(self):
@@ -221,8 +234,6 @@ class Ros2RobotEnv(gym.Env, Node):
             info_panel_height = 150
             canvas = np.zeros((rgb_h + info_panel_height, rgb_w, 3), dtype=np.uint8)
             canvas[0:rgb_h, 0:rgb_w] = rgb_img
-            
-            # --- Information Panel ---
             info_panel = canvas[rgb_h:, :]
             info_panel.fill(50)
             current_pose = obs['current_pose']
@@ -238,29 +249,21 @@ class Ros2RobotEnv(gym.Env, Node):
             cv2.putText(info_panel, target_text, (10, 60), font, 0.7, (150, 255, 150), 2)
             cv2.putText(info_panel, vel_text, (10, 90), font, 0.7, (255, 255, 255), 2)
             cv2.putText(info_panel, action_text, (10, 120), font, 0.7, (150, 150, 255), 2)
-
-            # --- Laser Scan Overlay ---
             scan_data = obs['scan']
-            # Center the LIDAR overlay in the middle of the image
             robot_center_x, robot_center_y = rgb_w // 2, rgb_h // 2 
             for i, distance in enumerate(scan_data):
-                # Filter out invalid ranges and values outside the desired rendering distance
                 if not (0.3 < distance < 12.0):
                     continue
-                
                 angle = np.deg2rad(i)
-                pixel_dist = distance * 30 # Scale factor for visualization
+                pixel_dist = distance * 30
                 img_angle = angle - np.pi / 2
                 px = int(robot_center_x - pixel_dist * np.cos(img_angle))
                 py = int(robot_center_y - pixel_dist * np.sin(img_angle))
                 if 0 <= px < rgb_w and 0 <= py < rgb_h:
                     cv2.circle(canvas, (px, py), 3, (0, 255, 255), -1)
-            
-            # Resize the final canvas if a size is specified
             final_canvas = canvas
             if self.render_size is not None and len(self.render_size) == 2:
                 final_canvas = cv2.resize(canvas, self.render_size, interpolation=cv2.INTER_AREA)
-
             cv2.imshow("ROS2 RL Render", final_canvas)
             cv2.waitKey(1)
 
@@ -272,7 +275,6 @@ class Ros2RobotEnv(gym.Env, Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    # Example of using the new render_size parameter
     env = Ros2RobotEnv(render_mode='human', render_size=(256, 256))
     try:
         for episode in range(5):
