@@ -17,14 +17,15 @@ The environment requires a working ROS2 installation (Humble, Iron, etc.) and Py
 
 1.  **Clone the repository (if applicable):**
     ```bash
-    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
-    cd your-repo-name
+    git clone https://github.com/Bigkatoan/puppet_env.git
+    cd puppet_env
     ```
 
 2.  **Install Python dependencies:**
     The core dependencies are `gymnasium` for the RL framework and `opencv-python` for rendering.
     ```bash
-    pip install gymnasium numpy opencv-python
+    pip install gymnasium
+    pip install "numpy<2" opencv-python==4.5.5.64
     ```
     > **Note:** `rclpy` and `cv_bridge` are included with your ROS2 installation and do not need to be installed via pip.
 
