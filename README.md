@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A `gymnasium`-compatible environment for training reinforcement learning agents on a real or simulated ROS2-enabled robot. This environment provides a standardized interface for navigation tasks, connecting state-of-the-art RL algorithms with rich sensor data from a robot.
+A `gymnasium`-compatible environment for training reinforcement learning agents on a real or simulated ROS2-enabled robot. This environment provides a standardized interface for navigation tasks, connecting state-of-the-art RL algorithms with rich sensor data and robust, real-world-ready recovery mechanisms.
 
 <p align="center">
   <!-- You can add a GIF or image of your robot in action here -->
@@ -17,15 +17,14 @@ The environment requires a working ROS2 installation (Humble, Iron, etc.) and Py
 
 1.  **Clone the repository (if applicable):**
     ```bash
-    git clone https://github.com/Bigkatoan/puppet_env.git
-    cd puppet_env
+    git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
+    cd your-repo-name
     ```
 
 2.  **Install Python dependencies:**
     The core dependencies are `gymnasium` for the RL framework and `opencv-python` for rendering.
     ```bash
-    pip install gymnasium
-    pip install "numpy<2" opencv-python==4.5.5.64
+    pip install gymnasium numpy opencv-python
     ```
     > **Note:** `rclpy` and `cv_bridge` are included with your ROS2 installation and do not need to be installed via pip.
 
@@ -33,7 +32,7 @@ The environment requires a working ROS2 installation (Humble, Iron, etc.) and Py
 
 ## Usage
 
-To use the environment, import `Ros2RobotEnv` and create an instance. Ensure your ROS2 environment is sourced and the robot simulation or hardware is running and publishing the required topics.
+To use the environment, import `Ros2RobotEnv` and create an instance. Ensure your ROS2 environment is sourced and the robot simulation or hardware is running and publishing the required topics (`/map`, `/scan`, etc.).
 
 ```python
 import gymnasium
@@ -110,19 +109,23 @@ The action space is a `gymnasium.spaces.Box` of shape `(2,)`, representing `[lin
 
 The environment uses a **shaped reward function** to provide dense feedback, accelerating learning. The total reward is a sum of the following components:
 
-1.  **Progress Reward**: A positive reward proportional to the reduction in distance to the goal. This encourages the agent to make consistent progress.
-    * `r_progress = C1 * (d_{t-1} - d_t)`
-
-2.  **Obstacle Penalty**: A quadratic penalty that activates when the robot is within a predefined `safety_margin` of an obstacle, deterring unsafe actions.
-    * `r_obstacle = -C2 * (d_safe - d_obs)^2`
-
+1.  **Progress Reward**: A positive reward proportional to the reduction in distance to the goal.
+2.  **Obstacle Penalty**: A quadratic penalty that activates when the robot is within a predefined `safety_margin` of an obstacle.
 3.  **Time Penalty**: A small constant penalty (`-0.1`) at each step to encourage path efficiency.
-
 4.  **Terminal Rewards**: Large bonuses or penalties are given at the end of an episode:
     * **Goal Reached**: `+100`
     * **Collision**: `-100`
 
-The weights `C1` and `C2`, along with the `safety_margin`, can be tuned in the `__init__` method of the `Ros2RobotEnv` class.
+### Reset and Recovery Logic
+
+This environment is designed for robust, real-world training. It does **not** rely on unrealistic "teleportation" to reset the robot's position.
+
+1.  **Map-Aware Goal Sampling**: At the start of a new episode, a goal is randomly sampled from a list of known "safe" locations on the map. These locations are guaranteed to be a certain distance away from walls or obstacles.
+
+2.  **Intelligent Trajectory Recovery**: If an episode ends due to a collision or timeout, the environment initiates an autonomous recovery maneuver.
+    * A buffer stores the robot's last 15 positions, creating a "breadcrumb trail."
+    * The robot uses a built-in controller to navigate backward along this known-safe path to its starting point.
+    * This "undo" action allows the robot to physically extricate itself from stuck states, a critical feature for real-world operation.
 
 ---
 
@@ -135,23 +138,8 @@ env = Ros2RobotEnv(render_mode='human', render_size=(256, 256))
 ```
 
 The render window displays:
-
 * **Live RGB Feed**: The main view from the robot's camera.
 * **LIDAR Overlay**: Laser scan points are projected onto the image (yellow dots), filtered to show ranges between 0.3m and 12m.
 * **Info Panel**: A real-time display of the robot's current pose, target pose, wheel velocities, and the last action taken.
 
 ---
-
-## Citing
-
-If you use this environment in your research, please consider citing it:
-
-```bibtex
-@misc{your_name_2025_ros2env,
-  author = {Your Name(s)},
-  title = {ROS2 Robot Navigation - Gymnasium Environment},
-  year = {2025},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{[https://github.com/your-username/your-repo-name](https://github.com/your-username/your-repo-name)}},
-}
