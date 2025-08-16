@@ -1,1 +1,10 @@
 venv
+train/logs
+train/phase1_dataset
+train/__pycache__
+train/trained_models
+train/edge_autoencoder.pth
+train/pose_network.pth
+train/agents/__pycache__
+train/models/__pycache__
+train/utils/__pycache__
