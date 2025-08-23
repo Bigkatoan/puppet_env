@@ -1,0 +1,13 @@
+{
+    "configuration": "default",
+    "documentId": "0ca5badd485950d11ef1cfb9",
+    "documentMicroversion": "d7ab1b53ef55e33d9b1b9b56",
+    "elementId": "a706c370df9eddf3d6117f07",
+    "fullConfiguration": "default",
+    "id": "MBb8bxteGMZzY3yPc",
+    "isStandardContent": false,
+    "name": "orin_cover <1>",
+    "partId": "JKD",
+    "suppressed": false,
+    "type": "Part"
+}

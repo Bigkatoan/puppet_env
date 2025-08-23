@@ -1,0 +1,13 @@
+{
+    "configuration": "default",
+    "documentId": "0ca5badd485950d11ef1cfb9",
+    "documentMicroversion": "d7ab1b53ef55e33d9b1b9b56",
+    "elementId": "6af7fba8b0aa340913494544",
+    "fullConfiguration": "default",
+    "id": "MEao3q25I2HuEMGgi",
+    "isStandardContent": false,
+    "name": "orin_lid <2>",
+    "partId": "JHD",
+    "suppressed": false,
+    "type": "Part"
+}

@@ -1,0 +1,250 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="puppet">
+  <!-- Macro for wheel links -->
+  <xacro:macro name="wheel_link" params="name">
+    <link name="${name}">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="1e-09"/>
+        <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 -1.73472e-18 -0.026" rpy="-1.5708 -0 0"/>
+        <geometry>
+          <mesh filename="package://puppet/meshes/wheel.stl"/>
+        </geometry>
+        <material name="${name}_material">
+          <color rgba="0.301961 0.301961 0.301961 1.0"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 -1.73472e-18 -0.026" rpy="-1.5708 -0 0"/>
+        <geometry>
+          <mesh filename="package://puppet/meshes/wheel.stl"/>
+        </geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <!-- Link base_link -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <!-- Part lidar_holder -->
+    <visual>
+      <origin xyz="7.10678e-05 -7.10678e-05 0.121" rpy="2.08167e-16 2.46519e-32 -3.14159"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/lidar_holder.stl"/>
+      </geometry>
+      <material name="lidar_holder_material">
+        <color rgba="0.901961 0.901961 0.901961 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="7.10678e-05 -7.10678e-05 0.121" rpy="2.08167e-16 2.46519e-32 -3.14159"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/lidar_holder.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part lidar_arc -->
+    <visual>
+      <origin xyz="7.10678e-05 -7.10678e-05 0.121" rpy="3.14159 -0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/lidar_arc.stl"/>
+      </geometry>
+      <material name="lidar_arc_material">
+        <color rgba="0.901961 0.901961 0.901961 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="7.10678e-05 -7.10678e-05 0.121" rpy="3.14159 -0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/lidar_arc.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part motor_holder -->
+    <visual>
+      <origin xyz="0.06 -0.0877 -0.0141" rpy="1.5708 -0 3.14159"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+      <material name="motor_holder_material">
+        <color rgba="0.737255 0.937255 0.917647 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.06 -0.0877 -0.0141" rpy="1.5708 -0 3.14159"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part board -->
+    <visual>
+      <origin xyz="-0.0235 -1.38778e-17 0.053" rpy="3.14159 -0 3.14159"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/board.stl"/>
+      </geometry>
+      <material name="board_material">
+        <color rgba="0.615686 0.811765 0.929412 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0235 -1.38778e-17 0.053" rpy="3.14159 -0 3.14159"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/board.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part base_link -->
+    <visual>
+      <origin xyz="0 0 0.007" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/base_link.stl"/>
+      </geometry>
+      <material name="base_link_material">
+        <color rgba="0.901961 0.901961 0.901961 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.007" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/base_link.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part up_plate -->
+    <visual>
+      <origin xyz="7.10678e-05 -7.10678e-05 0.09" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/up_plate.stl"/>
+      </geometry>
+      <material name="up_plate_material">
+        <color rgba="0.901961 0.901961 0.901961 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="7.10678e-05 -7.10678e-05 0.09" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/up_plate.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part motor_holder_2 -->
+    <visual>
+      <origin xyz="-0.06 -0.0877 -0.0141" rpy="1.5708 -0 3.14159"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+      <material name="motor_holder_2_material">
+        <color rgba="0.737255 0.937255 0.917647 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.06 -0.0877 -0.0141" rpy="1.5708 -0 3.14159"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part motor_holder_3 -->
+    <visual>
+      <origin xyz="-0.06 0.0877 -0.0141" rpy="1.5708 -0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+      <material name="motor_holder_3_material">
+        <color rgba="0.737255 0.937255 0.917647 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.06 0.0877 -0.0141" rpy="1.5708 -0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part motor_holder_4 -->
+    <visual>
+      <origin xyz="0.06 0.0877 -0.0141" rpy="1.5708 -0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+      <material name="motor_holder_4_material">
+        <color rgba="0.737255 0.937255 0.917647 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.06 0.0877 -0.0141" rpy="1.5708 -0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Lidar link - Đổi tên thành laser_frame -->
+  <link name="laser_frame">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/lidar_link.stl"/>
+      </geometry>
+      <material name="laser_frame_material">
+        <color rgba="0.262745 0.282353 0.301961 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/lidar_link.stl"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Joint for lidar - Changed to fixed type for static transform -->
+  <joint name="lidar_joint" type="fixed">
+    <origin xyz="7.10678e-05 -7.10678e-05 0.124" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="laser_frame"/>
+  </joint>
+
+  <!-- Wheel links - Đổi tên link theo tiêu chuẩn -->
+  <xacro:wheel_link name="front_left_wheel"/>
+  <xacro:wheel_link name="front_right_wheel"/>
+  <xacro:wheel_link name="rear_left_wheel"/>
+  <xacro:wheel_link name="rear_right_wheel"/>
+
+  <!-- Joints for wheels - Đổi tên joint khớp với topic joint_states -->
+  <joint name="front_left_wheel_joint" type="continuous">
+    <origin xyz="0.06 0.0927 -0.0141" rpy="-1.5708 -0 3.14159"/>
+    <parent link="base_link"/>
+    <child link="front_left_wheel"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10"/>
+  </joint>
+  
+  <joint name="front_right_wheel_joint" type="continuous">
+    <origin xyz="0.06 -0.0927 -0.0141" rpy="1.5708 -0 3.14159"/>
+    <parent link="base_link"/>
+    <child link="front_right_wheel"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10"/>
+  </joint>
+  
+  <joint name="rear_left_wheel_joint" type="continuous">
+    <origin xyz="-0.06 0.0927 -0.0141" rpy="-1.5708 -0 3.14159"/>
+    <parent link="base_link"/>
+    <child link="rear_left_wheel"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10"/>
+  </joint>
+  
+  <joint name="rear_right_wheel_joint" type="continuous">
+    <origin xyz="-0.06 -0.0927 -0.0141" rpy="1.5708 -0 3.14159"/>
+    <parent link="base_link"/>
+    <child link="rear_right_wheel"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+</robot>

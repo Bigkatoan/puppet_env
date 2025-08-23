@@ -1,0 +1,352 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="config">
+
+  <!-- ========== CONSTANTS ========== -->
+  <xacro:property name="M_PI" value="3.141592653589793" />
+  <xacro:property name="wheel_mass" value="1e-09" />
+  <xacro:property name="sensor_mass" value="1e-05" />
+
+  <!-- ========== MATERIALS ========== -->
+  <material name="lidar_holder_material">
+    <color rgba="0.901961 0.901961 0.901961 1.0"/>
+  </material>
+  <material name="orin_cover_material">
+    <color rgba="0.647059 0.647059 0.647059 1.0"/>
+  </material>
+  <material name="orin_lid_material">
+    <color rgba="0.615686 0.811765 0.929412 1.0"/>
+  </material>
+  <material name="orin_floor_2_material">
+    <color rgba="0.647059 0.647059 0.647059 1.0"/>
+  </material>
+  <material name="orin_floor_1_material">
+    <color rgba="0.615686 0.811765 0.929412 1.0"/>
+  </material>
+  <material name="camera_material">
+    <color rgba="0.615686 0.811765 0.929412 1.0"/>
+  </material>
+  <material name="motor_holder_material">
+    <color rgba="0.737255 0.937255 0.917647 1.0"/>
+  </material>
+  <material name="board_material">
+    <color rgba="0.615686 0.811765 0.929412 1.0"/>
+  </material>
+  <material name="base_link_material">
+    <color rgba="0.901961 0.901961 0.901961 1.0"/>
+  </material>
+  <material name="up_plate_material">
+    <color rgba="0.901961 0.901961 0.901961 1.0"/>
+  </material>
+  <material name="edge_material">
+    <color rgba="0.231373 0.380392 0.705882 1.0"/>
+  </material>
+  <material name="lidar_link_material">
+    <color rgba="0.262745 0.282353 0.301961 1.0"/>
+  </material>
+  <material name="wheel_material">
+    <color rgba="0.301961 0.301961 0.301961 1.0"/>
+  </material>
+
+  <!-- ========== BASE LINK ========== -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    
+    <!-- Lidar Holder -->
+    <visual>
+      <origin xyz="0.026071 -7.10678e-05 0.146" rpy="-9.86076e-32 9.86076e-32 -${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/lidar_holder.stl"/>
+      </geometry>
+      <material name="lidar_holder_material"/>
+    </visual>
+    <collision>
+      <origin xyz="0.026071 -7.10678e-05 0.146" rpy="-9.86076e-32 9.86076e-32 -${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/lidar_holder.stl"/>
+      </geometry>
+    </collision>
+    
+    <!-- Orin Cover -->
+    <visual>
+      <origin xyz="-0.00942666 -0.0174236 0.093" rpy="0 0 ${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/orin_cover.stl"/>
+      </geometry>
+      <material name="orin_cover_material"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.00942666 -0.0174236 0.093" rpy="0 0 ${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/orin_cover.stl"/>
+      </geometry>
+    </collision>
+    
+    <!-- Orin Lid -->
+    <visual>
+      <origin xyz="0.0204439 -0.00516532 0.143" rpy="0 0 ${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/orin_lid.stl"/>
+      </geometry>
+      <material name="orin_lid_material"/>
+    </visual>
+    <collision>
+      <origin xyz="0.0204439 -0.00516532 0.143" rpy="0 0 ${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/orin_lid.stl"/>
+      </geometry>
+    </collision>
+    
+    <!-- Orin Floor 2 -->
+    <visual>
+      <origin xyz="-0.00942666 -0.0174236 0.093" rpy="0 0 ${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/orin_floor_2.stl"/>
+      </geometry>
+      <material name="orin_floor_2_material"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.00942666 -0.0174236 0.093" rpy="0 0 ${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/orin_floor_2.stl"/>
+      </geometry>
+    </collision>
+    
+    <!-- Orin Floor 1 -->
+    <visual>
+      <origin xyz="-0.00942666 -0.0174236 0.093" rpy="0 0 ${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/orin_floor_1.stl"/>
+      </geometry>
+      <material name="orin_floor_1_material"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.00942666 -0.0174236 0.093" rpy="0 0 ${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/orin_floor_1.stl"/>
+      </geometry>
+    </collision>
+    
+    <!-- Motor Holder (Front Right) -->
+    <visual>
+      <origin xyz="0.06 -0.0877 -0.0141" rpy="${M_PI/2} 0 ${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+      <material name="motor_holder_material"/>
+    </visual>
+    <collision>
+      <origin xyz="0.06 -0.0877 -0.0141" rpy="${M_PI/2} 0 ${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+    </collision>
+    
+    <!-- Motor Holder (Front Left) -->
+    <visual>
+      <origin xyz="-0.06 -0.0877 -0.0141" rpy="${M_PI/2} 0 ${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+      <material name="motor_holder_material"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.06 -0.0877 -0.0141" rpy="${M_PI/2} 0 ${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+    </collision>
+    
+    <!-- Motor Holder (Rear Right) -->
+    <visual>
+      <origin xyz="-0.06 0.0877 -0.0141" rpy="${M_PI/2} 0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+      <material name="motor_holder_material"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.06 0.0877 -0.0141" rpy="${M_PI/2} 0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+    </collision>
+    
+    <!-- Motor Holder (Rear Left) -->
+    <visual>
+      <origin xyz="0.06 0.0877 -0.0141" rpy="${M_PI/2} 0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+      <material name="motor_holder_material"/>
+    </visual>
+    <collision>
+      <origin xyz="0.06 0.0877 -0.0141" rpy="${M_PI/2} 0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/motor_holder.stl"/>
+      </geometry>
+    </collision>
+    
+    <!-- Board -->
+    <visual>
+      <origin xyz="-0.0235 -1.38778e-17 0.053" rpy="${M_PI} 0 ${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/board.stl"/>
+      </geometry>
+      <material name="board_material"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.0235 -1.38778e-17 0.053" rpy="${M_PI} 0 ${M_PI}"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/board.stl"/>
+      </geometry>
+    </collision>
+    
+    <!-- Base Plate -->
+    <visual>
+      <origin xyz="0 0 0.007" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/base_link.stl"/>
+      </geometry>
+      <material name="base_link_material"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.007" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/base_link.stl"/>
+      </geometry>
+    </collision>
+    
+    <!-- Up Plate -->
+    <visual>
+      <origin xyz="7.10678e-05 -7.10678e-05 0.09" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/up_plate.stl"/>
+      </geometry>
+      <material name="up_plate_material"/>
+    </visual>
+    <collision>
+      <origin xyz="7.10678e-05 -7.10678e-05 0.09" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/up_plate.stl"/>
+      </geometry>
+    </collision>
+    
+    <!-- Edge -->
+    <visual>
+      <origin xyz="0.0396687 0.0172814 0.093" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/edge.stl"/>
+      </geometry>
+      <material name="edge_material"/>
+    </visual>
+    <collision>
+      <origin xyz="0.0396687 0.0172814 0.093" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://puppet/meshes/edge.stl"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- ========== WHEEL MACRO ========== -->
+  <xacro:macro name="wheel" params="name suffix xyz_origin rpy_origin xyz_visual rpy_visual">
+    <link name="${name}">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${wheel_mass}"/>
+        <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+      </inertial>
+      
+      <visual>
+        <origin xyz="${xyz_visual}" rpy="${rpy_visual}"/>
+        <geometry>
+          <mesh filename="package://puppet/meshes/wheel.stl"/>
+        </geometry>
+        <material name="wheel_material"/>
+      </visual>
+      
+      <collision>
+        <origin xyz="${xyz_visual}" rpy="${rpy_visual}"/>
+        <geometry>
+          <mesh filename="package://puppet/meshes/wheel.stl"/>
+        </geometry>
+      </collision>
+    </link>
+    
+    <joint name="${suffix}" type="continuous">
+      <origin xyz="${xyz_origin}" rpy="${rpy_origin}"/>
+      <parent link="base_link"/>
+      <child link="${name}"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="10" velocity="10"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- ========== WHEEL INSTANCES ========== -->
+  <!-- Sửa tên joint và bánh xe theo yêu cầu -->
+  <!-- Rear Right Wheel -->
+  <xacro:wheel name="wheel_rear_right" suffix="rear_right_wheel_joint" 
+               xyz_origin="-0.06 -0.0927 -0.0141" rpy_origin="${M_PI/2} 0 ${M_PI}" 
+               xyz_visual="0 -1.73472e-18 -0.026" rpy_visual="-${M_PI/2} 0 0"/>
+               
+  <!-- Front Right Wheel -->
+  <xacro:wheel name="wheel_front_right" suffix="front_right_wheel_joint" 
+               xyz_origin="0.06 -0.0927 -0.0141" rpy_origin="${M_PI/2} 0.0383117 ${M_PI}" 
+               xyz_visual="0 -3.46945e-18 -0.026" rpy_visual="-${M_PI/2} 0 -8.48055e-18"/>
+               
+  <!-- Front Left Wheel -->
+  <xacro:wheel name="wheel_front_left" suffix="front_left_wheel_joint" 
+               xyz_origin="0.06 0.0927 -0.0141" rpy_origin="-${M_PI/2} 0 ${M_PI}" 
+               xyz_visual="0 1.73472e-18 0" rpy_visual="${M_PI/2} 0 0"/>
+               
+  <!-- Rear Left Wheel -->
+  <xacro:wheel name="wheel_rear_left" suffix="rear_left_wheel_joint" 
+               xyz_origin="-0.06 0.0927 -0.0141" rpy_origin="-${M_PI/2} 0 ${M_PI}" 
+               xyz_visual="0 1.73472e-18 0" rpy_visual="${M_PI/2} 0 0"/>
+
+  <!-- ========== SENSOR MACRO ========== -->
+  <xacro:macro name="sensor" params="name type xyz_origin rpy_origin">
+    <link name="${name}">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${sensor_mass}"/>
+        <inertia ixx="1e-06" ixy="0" ixz="0" iyy="1e-06" iyz="0" izz="1e-06"/>
+      </inertial>
+      
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://puppet/meshes/${type}.stl"/>
+        </geometry>
+        <material name="${type}_material"/>
+      </visual>
+      
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://puppet/meshes/${type}.stl"/>
+        </geometry>
+      </collision>
+    </link>
+    
+    <joint name="${name}_joint" type="fixed">
+      <origin xyz="${xyz_origin}" rpy="${rpy_origin}"/>
+      <parent link="base_link"/>
+      <child link="${name}"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- ========== SENSOR INSTANCES ========== -->
+  <xacro:sensor name="laser_frame" type="laser_frame" 
+                xyz_origin="0.026071 -7.10678e-05 0.149" 
+                rpy_origin="-2.08167e-16 -2.46519e-32 5.47382e-48"/>
+                
+<xacro:sensor name="camera_link" type="camera" 
+              xyz_origin="0.15 0.00694306 0.07" 
+              rpy_origin="0 0 0"/>  <!-- Hoàn toàn song song với XY -->
+
+
+</robot>
