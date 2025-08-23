@@ -5,5 +5,5 @@ train/__pycache__
 train/trained_models
 train/edge_autoencoder.pth
 train/pose_network.pth
-*__pycache__
-*.ipynb_checkpoints
+__pycache__
+.ipynb_checkpoints
