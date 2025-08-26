@@ -38,7 +38,7 @@ To use the environment, import `Ros2RobotEnv` and create an instance. Ensure you
 ```python
 import gymnasium
 import rclpy
-from ros2_robot_env import Ros2RobotEnv # Make sure the file is in your PYTHONPATH
+from puppet import Ros2RobotEnv # Make sure the file is in your PYTHONPATH
 
 def main():
     rclpy.init()
