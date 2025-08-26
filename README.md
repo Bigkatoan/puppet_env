@@ -10,7 +10,6 @@ A `gymnasium`-compatible environment for training reinforcement learning agents 
 </p>
 
 ---
-
 ## Installation
 
 The environment requires a working ROS2 installation (Humble, Iron, etc.) and Python 3.8+.
