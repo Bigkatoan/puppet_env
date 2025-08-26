@@ -10,6 +10,11 @@ A `gymnasium`-compatible environment for training reinforcement learning agents 
 </p>
 
 ---
+## Directory Structure
+- /puppet: Contains the ROS2 source code for the robot. This package needs to be copied into your ROS2 workspace to be built and run. In this folder contain all stl file for 3d print or cnc for your own robot.
+- /train: Contains the puppet.py file, which defines the Gymnasium environment. It also includes the source code for training both phase 1 and phase 2 of the robot's learning process.
+
+---
 ## Installation
 
 The environment requires a working ROS2 installation (Humble, Iron, etc.) and Python 3.8+.
