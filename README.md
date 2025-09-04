@@ -4,7 +4,7 @@
 
 A `gymnasium`-compatible environment for training reinforcement learning agents on a real or simulated ROS2-enabled robot. This environment provides a standardized interface for navigation tasks, connecting state-of-the-art RL algorithms with rich sensor data and robust, real-world-ready recovery mechanisms.
 
-[demo](demo (1).mp4)
+![demo](dm.gif)
 
 ---
 ## Directory Structure
